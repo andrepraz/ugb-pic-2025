@@ -6,3 +6,8 @@ O arquivo main.py contém o código que chamamos de Access Point (AP) - Um ponto
 
 # cliente_esp32_deteccao.py
 Este arquigo contém uma aplicação para detectar o movimento dos dedos da mão e passa o sinal para o AP que movimentará a mão.
+
+# uso do Git
+```
+> git status
+```
