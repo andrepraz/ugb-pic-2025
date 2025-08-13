@@ -13,7 +13,7 @@ cap.set(3, 640)  # Largura
 cap.set(4, 480)  # Altura
 
 mpHands = mp.solutions.hands
-hands = mpHands.Hands(static_image_mode=False, max_num_hands=2,
+hands = mpHands.Hands(static_image_mode=False, max_num_hands=1,
                       min_detection_confidence=0.5, min_tracking_confidence=0.5)
 mpDraw = mp.solutions.drawing_utils
 
@@ -51,18 +51,21 @@ while True:
 
             # Landmarks para cada dedo
             finger_tips = [4, 8, 12, 16, 20]   # Polegar, Indicador, Médio, Anelar, Mínimo
-            finger_mcp  = [2, 5, 9, 13, 17]    # MCP ou articulação base
+            finger_mcp  = [5, 5, 9, 13, 17]    # MCP ou articulação base
 
             # Detectar se cada dedo está aberto (tip < mcp => aberto)
             for i, (tip_id, mcp_id) in enumerate(zip(finger_tips, finger_mcp)):
-                is_open = handLms.landmark[tip_id].y < handLms.landmark[mcp_id].y
+                if tip_id == 4:
+                    is_open = handLms.landmark[tip_id].x > handLms.landmark[mcp_id].x
+                else:
+                    is_open = handLms.landmark[tip_id].y < handLms.landmark[mcp_id].y
                 state = "Aberto" if is_open else "Fechado"
 
                 # Só envia se houve mudança no estado do dedo
                 if previous_fingers_state[i] != state:
                     previous_fingers_state[i] = state
                     message = f"{finger_names[i]}:{state}"
-                    threading.Thread(target=send_message_to_esp32, args=(message,)).start()
+                    #threading.Thread(target=send_message_to_esp32, args=(message,)).start()
 
                 # Escreve na tela o estado de cada dedo
                 cv2.putText(img, f"{finger_names[i]}: {state}",
