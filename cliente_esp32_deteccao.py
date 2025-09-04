@@ -65,7 +65,7 @@ while True:
                 if previous_fingers_state[i] != state:
                     previous_fingers_state[i] = state
                     message = f"{finger_names[i]}:{state}"
-                    #threading.Thread(target=send_message_to_esp32, args=(message,)).start()
+                    threading.Thread(target=send_message_to_esp32, args=(message,)).start()
 
                 # Escreve na tela o estado de cada dedo
                 cv2.putText(img, f"{finger_names[i]}: {state}",
