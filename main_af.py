@@ -1,5 +1,6 @@
 import network
 import socket
+from time import sleep
 from machine import Pin, PWM
 
 # Configuração dos servos para cada dedo
@@ -22,9 +23,13 @@ def mover_dedo(dedo, estado):
         return
 
     if estado == "Aberto":
-        servos[dedo].duty(26)  # posição aberta
+        servos[dedo].duty(100)  # posição aberta
+        sleep(0.2)
+        print("Posição Aberta")
     elif estado == "Fechado":
-        servos[dedo].duty(80)  # posição fechada
+        servos[dedo].duty(20)  # posição fechada
+        sleep(0.2)
+        print("Posição Fechada")
     else:
         print(f"Estado desconhecido: {estado}")
 
@@ -45,6 +50,7 @@ print('Endereço IP:', ap.ifconfig()[0])
 port = 80
 addr = socket.getaddrinfo('0.0.0.0', port)[0][-1]
 s = socket.socket()
+s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 s.bind(addr)
 s.listen(1)
 
@@ -64,11 +70,12 @@ try:
             # Espera formato "<dedo>:<estado>"
             if ":" in message:
                 dedo, estado = message.split(":", 1)
+                print("==>", dedo, estado)
                 mover_dedo(dedo, estado)
             else:
                 print("Formato inválido:", message)
 
-            conn.sendall(f"Mensagem recebida: {message}".encode())
+            #conn.sendall(f"Mensagem recebida: {message}".encode())
 
         conn.close()
 
