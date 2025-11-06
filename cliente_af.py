@@ -31,8 +31,8 @@ def send_message_to_esp32(message):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             s.connect((ESP32_IP, PORT))
             s.sendall(message.encode())
-            response = s.recv(1024)
-            print("Recebido do ESP32:", response.decode())
+            #response = s.recv(1024)
+            #print("Recebido do ESP32:", response.decode())
     except ConnectionRefusedError:
         print("Falha na conexão. Verifique se o ESP32 está ativo e escutando.")
     except Exception as e:
